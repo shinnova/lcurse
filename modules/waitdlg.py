@@ -1,5 +1,6 @@
 from PyQt5 import Qt
 from bs4 import BeautifulSoup
+import urllib.parse
 from urllib.request import build_opener, HTTPCookieProcessor, HTTPError
 from http import cookiejar
 import zipfile
@@ -24,7 +25,7 @@ def OpenWithRetry(url):
     # Retry 5 times
     while count < maxcount:
         try:
-            response = opener.open(str(url))
+            response = opener.open(urllib.parse.urlparse(urllib.parse.quote(url, ':/')).geturl())
 
             return response
 
@@ -305,7 +306,7 @@ class UpdateCatalogDlg(Qt.QDialog):
     def onProgress(self, foundAddons):
         value = self.progress.value() + 1
         self.progress.setValue(value)
-        self.progress.setFormat(self.tr("%%p%% - found Addons: {}").format(foundAddons))
+        self.progress.setFormat(self.tr("%p% - found Addons: {}").format(foundAddons))
 
     @Qt.pyqtSlot(Qt.QVariant)
     def onUpdateCatalogFinished(self, addons):
